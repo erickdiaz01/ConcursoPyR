@@ -1,7 +1,9 @@
+// Importación del modelo de un Concurso
 const Concurso = require("../models/Concurso");
-
+//Importación del metodo response de Express
 const { response } = require("express");
 
+// Este metodo tomará la nueva categoria a crear de un concurso y las preguntas correspondientes a cada nivel mandados desde el Front para recibirlo y crear un nuevo concurso
 const crearConcurso = async (req, resp = response) => {
   const {
     category,
@@ -35,7 +37,7 @@ const crearConcurso = async (req, resp = response) => {
     });
   }
 };
-
+//Metodo para tomar todos los concursos registrados en la base de datos
 const getConcursos = async (req, resp = response) => {
   try {
     const concursos = await Concurso.find();
@@ -44,7 +46,7 @@ const getConcursos = async (req, resp = response) => {
     console.log(error);
   }
 };
-
+// Metodo para tomar solo un concurso en especial, mediante el parametro de entrada ":id" en la URL
 const getConcurso = async (req, resp = response) => {
   try {
   

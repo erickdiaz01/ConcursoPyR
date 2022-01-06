@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-
+//Modelo de un concurso, en donde se tiene una categoria, y 5 niveles, los cuales son arreglos de objetos que constan de la pregunta, 3 opciones incorrectas y 1 respuesta correcta
 const createConcursoSchema = new Schema(
   {
     category: {
