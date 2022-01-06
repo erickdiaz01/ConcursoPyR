@@ -16,3 +16,5 @@ router.post(
 router.get("/usuarios", getUsuarios);
 
 router.get("/usuario/:id", getUsuario);
+
+module.exports = router;

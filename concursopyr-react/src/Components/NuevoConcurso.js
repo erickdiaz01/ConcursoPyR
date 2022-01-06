@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Input from "../Common/Input/Input";
+import axios from "axios";
 
 const NuevoConcurso = () => {
+  const [concursos, setConcursos] = useState([]);
+
   const [category, setCategory] = useState("");
   const [categoryError, setCategoryError] = useState(false);
   const [pregunta, setPregunta] = useState("");
@@ -20,11 +23,11 @@ const NuevoConcurso = () => {
   const [indicePregunta, setIndicePregunta] = useState(0);
   const [indiceNivel, setIndiceNivel] = useState(0);
 
-  const [preguntasNivel1, setPreguntasNivel1] = useState([]);
-  const [preguntasNivel2, setPreguntasNivel2] = useState([]);
-  const [preguntasNivel3, setPreguntasNivel3] = useState([]);
-  const [preguntasNivel4, setPreguntasNivel4] = useState([]);
-  const [preguntasNivel5, setPreguntasNivel5] = useState([]);
+  const [nivel1, setnivel1] = useState([]);
+  const [nivel2, setnivel2] = useState([]);
+  const [nivel3, setnivel3] = useState([]);
+  const [nivel4, setnivel4] = useState([]);
+  const [nivel5, setnivel5] = useState([]);
 
   function handleChange(value, name) {
     if (name === "category") {
@@ -97,7 +100,7 @@ const NuevoConcurso = () => {
       // eslint-disable-next-line default-case
       switch (indiceNivel) {
         case 0:
-          preguntasNivel1.push({
+          nivel1.push({
             pregunta: pregunta,
             respuestaCorrecta: respuestaCorrecta,
             respuestasIncorrectas: [
@@ -106,10 +109,11 @@ const NuevoConcurso = () => {
               respuestaIncorrecta3,
             ],
           });
+
           break;
 
         case 1:
-          preguntasNivel2.push({
+          nivel2.push({
             pregunta: pregunta,
             respuestaCorrecta: respuestaCorrecta,
             respuestasIncorrectas: [
@@ -118,10 +122,11 @@ const NuevoConcurso = () => {
               respuestaIncorrecta3,
             ],
           });
+
           break;
 
         case 2:
-          preguntasNivel3.push({
+          nivel3.push({
             pregunta: pregunta,
             respuestaCorrecta: respuestaCorrecta,
             respuestasIncorrectas: [
@@ -132,7 +137,7 @@ const NuevoConcurso = () => {
           });
           break;
         case 3:
-          preguntasNivel4.push({
+          nivel4.push({
             pregunta: pregunta,
             respuestaCorrecta: respuestaCorrecta,
             respuestasIncorrectas: [
@@ -143,7 +148,7 @@ const NuevoConcurso = () => {
           });
           break;
         case 4:
-          preguntasNivel5.push({
+          nivel5.push({
             pregunta: pregunta,
             respuestaCorrecta: respuestaCorrecta,
             respuestasIncorrectas: [
@@ -153,6 +158,9 @@ const NuevoConcurso = () => {
             ],
           });
           break;
+
+        default:
+          console.log("terminado");
       }
 
       if (indicePregunta < 4) {
@@ -165,11 +173,12 @@ const NuevoConcurso = () => {
           setSiguiente(false);
         }
       }
-      console.log(preguntasNivel1);
-      console.log(preguntasNivel2);
-      console.log(preguntasNivel3);
-      console.log(preguntasNivel4);
-      console.log(preguntasNivel5);
+
+      console.log(nivel1);
+      console.log(nivel2);
+      console.log(nivel3);
+      console.log(nivel4);
+      console.log(nivel5);
       console.log(indicePregunta);
       console.log(indiceNivel);
 
@@ -182,19 +191,79 @@ const NuevoConcurso = () => {
       return alert("Ingrese la información");
     }
   }
+  const getConcursos = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:4000/api/concurso/concursos"
+      );
+      if (data) {
+        setConcursos(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  async function handleCategory() {
+    try {
+      let concursoByCategory = await concursos.find(
+        (concurso) => concurso.category === category
+      );
 
-  function handleGuardarConcurso() {}
+      if (concursoByCategory) {
+        return alert("Ya existe un concurso con dicha categoria");
+      }
+      setInicio(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function handleGuardarConcurso() {
+    try {
+      console.log(nivel1);
+      console.log(nivel2);
+      console.log(nivel3);
+      console.log(nivel4);
+      console.log(nivel5);
+      let newConcurso = {
+        category,
+        nivel1: nivel1,
+        nivel2: nivel2,
+        nivel3: nivel3,
+        nivel4: nivel4,
+        nivel5: nivel5,
+      };
+      const { data, status } = await axios.post(
+        "http://localhost:4000/api/concurso/newconcurso",
+        newConcurso
+      );
+      if (status === (201 || 200)) {
+        console.log(data);
+        window.location.href = `/`;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  useEffect(() => {
+    getConcursos();
+  }, []);
   function renderizacionPreguntas(indiceNivel, indicePregunta) {
     return (
       <section>
-        <h2>Nuevo Concurso - {category}</h2>
-        <br/>
-        <h3>Nivel {indiceNivel + 1}</h3>
-        
-        <h4>Pregunta {indicePregunta + 1}</h4>
-        <br/>
-        <div className="row">
+        <h2 className="flex justify-center items-center text-2xl">
+          Nuevo Concurso - {category}
+        </h2>
+        <br />
+        <h3 className="flex justify-center items-center text-2xl">
+          Nivel {indiceNivel + 1}
+        </h3>
+
+        <h4 className="flex justify-center items-center text-xl">
+          Pregunta {indicePregunta + 1}
+        </h4>
+        <br />
+        <div className="row ml-4 mr-4">
           <label for="pregunta">Ingrese la pregunta</label>
           <Input
             attribute={{
@@ -208,7 +277,7 @@ const NuevoConcurso = () => {
             errorText={"Ingresa la información"}
           />
         </div>
-        <div className="row">
+        <div className="row ml-4 mr-4">
           <div className="col-md-6">
             <label for="respuestaInc1">
               Ingrese una opción de respuesta incorrecta
@@ -242,7 +311,7 @@ const NuevoConcurso = () => {
             />
           </div>
         </div>
-        <div className="row">
+        <div className="row ml-4 mr-4">
           <div className="col-md-6">
             <label for="respuestaInc3">
               Ingrese una opción de respuesta incorrecta
@@ -278,7 +347,11 @@ const NuevoConcurso = () => {
         </div>
         {siguiente && (
           <div>
-            <Button variant="success" onClick={handleSiguiente}>
+            <Button
+              variant="success"
+              className="bg-success flex justify-center items-center"
+              onClick={handleSiguiente}
+            >
               Siguiente
             </Button>
           </div>
@@ -290,8 +363,10 @@ const NuevoConcurso = () => {
   return (
     <div>
       {inicio && (
-        <section>
-          <h2>Ingresa el nombre de la categoria del nuevo concurso</h2>
+        <section className="justify-center m-4">
+          <h2 className="flex justify-center items- center text-2xl">
+            Ingresa el nombre de la categoria del nuevo concurso
+          </h2>
           <Input
             attribute={{
               id: "category",
@@ -304,7 +379,12 @@ const NuevoConcurso = () => {
             errorText={"Ingresa la información"}
           />
           <div>
-            <Button variant="dark" onClick={() => setInicio(false)}>
+            <Button
+              variant="dark"
+              className=",
+            bg-dark"
+              onClick={handleCategory}
+            >
               Ingresar Preguntas
             </Button>
           </div>
@@ -319,7 +399,11 @@ const NuevoConcurso = () => {
           <h2>Categoria del concurso: {category}</h2>
           <p>Preguntas: 25</p>
           <div>
-            <Button variant="dark" onClick={handleGuardarConcurso}>
+            <Button
+              variant="dark"
+              className="bg-dark"
+              onClick={handleGuardarConcurso}
+            >
               Guardar concurso
             </Button>
           </div>

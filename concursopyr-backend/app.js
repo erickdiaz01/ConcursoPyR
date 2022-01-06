@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const {dbConnection}=require("./database");
+const { dbConnection } = require("./database");
+
 //settings
 app.set("port", process.env.PORT || 4000);
 
@@ -12,21 +13,12 @@ dbConnection();
 app.use(cors());
 app.use(express.json());
 
-
-
 //routes
 
+app.use("/api/auth", require("./src/routes/auth"));
 
-// app.use("/api/auth", require("./src/routes/auth"))
+app.use("/api/concurso", require("./src/routes/concurso"));
 
-// app.use("/api/concurso",require("./src/routes/concurso"))
-
-// app.use("/api/juego",require("./src/routes/juego"))
-
-
-
-
-
-
+app.use("/api/juego", require("./src/routes/juego"));
 
 module.exports = app;

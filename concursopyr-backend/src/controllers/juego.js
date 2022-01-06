@@ -10,6 +10,8 @@ const nuevoJuego = async (req, resp = response) => {
       ok: true,
       message: "Juego creado con exito",
       jugador,
+      juego
+  
     });
   } catch (error) {
     console.log(error);
@@ -51,9 +53,20 @@ const getJuegos = async (req, resp = response) => {
   }
 };
 
+const getJuego = async (req, resp = response) => {
+  try {
+    const juego = await Juego.findById(req.params.id).populate("jugador").populate("concurso");
+    resp.json(juego);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 
 module.exports = {
     nuevoJuego,
     getJuegos,
-    actualizarJuego
+    actualizarJuego,
+    getJuego
 }

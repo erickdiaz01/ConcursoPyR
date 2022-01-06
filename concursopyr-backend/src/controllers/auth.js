@@ -5,12 +5,12 @@ const crearUsuario = async (req, resp = response) => {
   const { nombre } = req.body;
 
   try {
-    let usuario = new Usuario(nombre);
+    let usuario = new Usuario({nombre});
     await usuario.save();
     resp.status(201).json({
       ok: true,
       message: "Usuario creado de manera exitosa",
-      uid: usuario.id,
+      id: usuario.id,
       name: usuario.name,
     });
   } catch (error) {

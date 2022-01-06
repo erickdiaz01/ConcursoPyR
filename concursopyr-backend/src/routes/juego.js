@@ -5,6 +5,7 @@ const {
   nuevoJuego,
   getJuegos,
   actualizarJuego,
+  getJuego,
 } = require("../controllers/juego");
 
 router.post(
@@ -18,9 +19,12 @@ router.post(
 );
 
 router.get("/juegos", getJuegos);
+router.get("/juego/:id", getJuego);
 
 router.put(
   "/actualizarjuego/:id",
   check("puntaje", "El puntaje es obligatorio").not().isEmpty(),
   actualizarJuego
 );
+
+module.exports = router;

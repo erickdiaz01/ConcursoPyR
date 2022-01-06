@@ -29,7 +29,7 @@ const NavBar = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav>
             <Nav.Link href="/crearconcurso">Generar nuevo juego</Nav.Link>
-
+            <Nav.Link href="/historico">Historico</Nav.Link>
            
           </Nav>
         </Navbar.Collapse>
