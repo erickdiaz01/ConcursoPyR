@@ -255,7 +255,7 @@ const Juego = () => {
 
       <div className="aling-center">
         <Button variant="danger" className="bg-danger" onClick={handleRetirar}>
-          Danger
+          Retirarse
         </Button>
       </div>
     </>

@@ -1,6 +1,8 @@
+// Importación del modelo de un juego
 const Juego = require("../models/Juego");
 const { response } = require("express");
 
+//Metodo para crear un nuevo juego una vez se haya ingresado el nombre de usuario y la categoria con la que quiere participar el usuario
 const nuevoJuego = async (req, resp = response) => {
   const { concurso, jugador, puntaje } = req.body;
   try {
@@ -21,7 +23,7 @@ const nuevoJuego = async (req, resp = response) => {
     });
   }
 };
-
+//Metodo para actualizar el juego (el puntaje) según se vaya desarrollando
 const actualizarJuego = async (req, resp = response) => {
   try {
     let { puntaje } = req.body;
@@ -44,6 +46,7 @@ const actualizarJuego = async (req, resp = response) => {
   }
 };
 
+//Metodo para tomar todos los juegos registrados en la base de datos
 const getJuegos = async (req, resp = response) => {
   try {
     const juegos = await Juego.find().populate("jugador").populate("concurso");
@@ -52,7 +55,7 @@ const getJuegos = async (req, resp = response) => {
     console.log(error);
   }
 };
-
+//Metodo para tomar un solo juego en especial en la base de datos
 const getJuego = async (req, resp = response) => {
   try {
     const juego = await Juego.findById(req.params.id).populate("jugador").populate("concurso");
